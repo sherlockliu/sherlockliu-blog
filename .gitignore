@@ -7,6 +7,8 @@ vendor
 # Generated site
 _site/
 
-# Deployment scripts and Makefile (keep private)
-scripts/
-Makefile
+# Environment variables (contains credentials)
+.env
+
+# Backup directory
+.originals
