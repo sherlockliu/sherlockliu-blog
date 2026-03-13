@@ -4,6 +4,13 @@ set -e
 echo "🧹 Cleaning previous build..."
 rm -rf _site
 
+echo "🖼️  Optimizing images..."
+if [ -f "scripts/optimize-images.sh" ]; then
+    ./scripts/optimize-images.sh || echo "⚠️  Image optimization skipped (ImageMagick not installed?)"
+else
+    echo "⚠️  Image optimization script not found, skipping..."
+fi
+
 echo "🏗️  Building Jekyll site in production mode..."
 JEKYLL_ENV=production bundle exec jekyll build
 

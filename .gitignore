@@ -10,5 +10,6 @@ _site/
 # Environment variables (contains credentials)
 .env
 
-# Backup directory
-.originals
+# Image backups
+assets/images/.backups/
+assets/images/.originals/

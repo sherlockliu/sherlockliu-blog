@@ -57,31 +57,13 @@ install-image-tools:
 	@command -v optipng >/dev/null 2>&1 || brew install optipng
 	@echo "✓ Image tools installed"
 
-# Optimize images (compress PNGs)
-# Usage: 
-#   make optimize-images                          # Optimize all post images
-#   make optimize-images PATH=assets/images       # Optimize all images
-#   make optimize-images PATH=assets/images/posts/2026-03-10-*  # Specific folder
-#   make optimize-images FILE=path/to/image.png   # Single file
+# Optimize images
+# Usage:
+#   make optimize-images              # Optimize all post images
+#   make optimize-images FILE=file    # Optimize specific file
 optimize-images:
 	@if [ -n "$(FILE)" ]; then \
-		echo "Optimizing single file: $(FILE)"; \
-		mkdir -p assets/images/.originals; \
-		cp "$(FILE)" "assets/images/.originals/$$(basename $(FILE)).backup" 2>/dev/null || true; \
-		convert "$(FILE)" -quality 85 -strip "$(FILE).tmp" && mv "$(FILE).tmp" "$(FILE)"; \
-		echo "✓ Optimized $(FILE)"; \
-		ls -lh "$(FILE)"; \
+		./scripts/optimize-images.sh "$(FILE)"; \
 	else \
-		TARGET=$${PATH:-assets/images/posts}; \
-		echo "Optimizing PNG images in $$TARGET..."; \
-		echo "Creating backups in assets/images/.originals/..."; \
-		mkdir -p assets/images/.originals; \
-		find $$TARGET -name "*.png" -type f | while read img; do \
-			echo "Processing: $$img"; \
-			cp "$$img" "assets/images/.originals/$$(basename $$img).backup" 2>/dev/null || true; \
-			convert "$$img" -quality 85 -strip "$$img.tmp" && mv "$$img.tmp" "$$img"; \
-		done; \
-		echo "✓ Image optimization complete"; \
-		echo "Total size of $$TARGET:"; \
-		du -sh $$TARGET; \
+		./scripts/optimize-images.sh; \
 	fi

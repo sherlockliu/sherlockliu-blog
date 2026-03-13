@@ -122,7 +122,46 @@ series:
 - ✅ SEO optimization
 - ✅ RSS feed
 - ✅ Dark mode support
-- ✅ Image optimization tools
+- ✅ **Automatic image optimization** (reduces image sizes by 60-70%)
+
+## Image Optimization
+
+Images are **automatically optimized** in three ways:
+
+### 1. Automatic on Commit (Recommended)
+When you add/paste images and commit them, they're optimized automatically via git hook:
+```bash
+git add assets/images/posts/2026-03-15-my-post/hero.jpeg
+git commit -m "Add new post"
+# → Images are automatically optimized before commit!
+```
+
+### 2. During Build
+Images are optimized during production build:
+```bash
+make build-prod
+# → Optimizes all images before building
+```
+
+### 3. Manual Optimization
+Optimize all images manually:
+```bash
+make optimize-images              # Optimize all post images
+make optimize-images FILE=path    # Optimize specific file
+```
+
+### How It Works
+- Converts PNG → JPEG (better compression for photos)
+- Resizes to max 2000px width
+- Compresses to 85% quality
+- Strips metadata
+- **Result: 60-70% file size reduction** (e.g., 5MB → 1.5MB)
+- Backups saved to `assets/images/.backups/`
+
+### Requirements
+```bash
+brew install imagemagick
+```
 
 ## Security
 
