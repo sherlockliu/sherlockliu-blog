@@ -1,0 +1,55 @@
+title: SherlockLiu
+email: hancock.liu@gmail.com
+description: >-
+  Notes on engineering, management, and life from a minimal perspective.
+baseurl: "" 
+url: "https://sherlockliu.co.uk"
+
+# Build settings
+remote_theme: pages-themes/minimal
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Custom Variables
+author: SherlockLiu
+linkedin_username: sherlockliu
+
+# Social Sharing (SEO)
+logo: /assets/images/logo.png
+social:
+  name: SherlockLiu
+  links:
+    - https://linkedin.com/in/sherlockliu
+
+# Default image for social sharing (appears when sharing your site)
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/images/social-share-default.png
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+
+# RSS Feed Configuration
+feed:
+  path: feed.xml
+  excerpt_only: false
+  
+# SEO/Webmaster Tools
+google_analytics: G-458TYS4K1L
+webmaster_verifications:
+  google: # Add your Google Search Console verification code here
+  bing: # Add your Bing Webmaster verification code here
+
+# Giscus Comments (GitHub Discussions)
+giscus:
+  enabled: true
+  repo: sherlockliu/sherlockliu-blog
+  repo_id: R_kgDORg9FuA
+  category: General
+  category_id: DIC_kwDORg9FuM4C4UQG

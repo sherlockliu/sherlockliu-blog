@@ -1,0 +1,7 @@
+# https://sherlockliu.co.uk/robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://sherlockliu.co.uk/sitemap.xml

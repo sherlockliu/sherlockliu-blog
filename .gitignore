@@ -1,0 +1,12 @@
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor
+.DS_Store
+
+# Generated site
+_site/
+
+# Deployment scripts and Makefile (keep private)
+scripts/
+Makefile
