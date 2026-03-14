@@ -10,6 +10,7 @@ title: Home
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {% for post in site.posts limit:6 %}
+        {% if post.published != false %}
         <article class="group">
             <a href="{{ post.url | relative_url }}">
                 <div class="aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-900 mb-4 shadow-sm">
@@ -28,6 +29,7 @@ title: Home
                 </div>
             </a>
         </article>
+        {% endif %}
         {% endfor %}
     </div>
 

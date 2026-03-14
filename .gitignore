@@ -13,3 +13,8 @@ _site/
 # Image backups
 assets/images/.backups/
 assets/images/.originals/
+
+# Draft posts (uncomment to keep drafts private)
+# _drafts/
+# _drafts/*
+# !_drafts/README.md

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Claude Code Architecture (Part 1) — The Five Layers and Design Principles"
+title: "How Claude Code's Architecture Works — 5 Layers You Can Steal for AI Agents"
 date: 2026-03-10
 categories: [Engineering, Architecture]
 tags: [AI, Claude Code, System Design, AI Agents, Architecture, LLM, MCP, AI Development, Anthropic]
@@ -14,7 +14,7 @@ series:
   part: 1
   total: 6
   next_url: "/engineering/architecture/2026/03/12/the-master-loop-simplest-pattern-that-works-part-2.html"
-  next_title: "(Part 2) The Master Loop That Powers Everything"
+  next_title: "How Claude Code's Master Loop Works — The Simple Pattern That Beats Complex Frameworks"
 ---
 
 *Series: Agentic System Design, Learned from Claude Code — Part 1 of 6*

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Claude Code Architecture (Part 2) — The Master Loop That Powers Everything"
+title: "How Claude Code's Master Loop Works — The Simple Pattern That Beats Complex Frameworks"
 date: 2026-03-12
 categories: [Engineering, Architecture]
 tags: [AI, Claude Code, System Design, AI Agents, ReAct, Agent Loop, LLM]
@@ -14,7 +14,7 @@ series:
   part: 2
   total: 6
   prev_url: "/engineering/architecture/2026/03/10/how-claude-code-is-designed-part-1.html"
-  prev_title: "(Part 1) The Five Layers and Design Principles"
+  prev_title: "How Claude Code's Architecture Works — 5 Layers You Can Steal for AI Agents"
 ---
 
 *Series: Agentic System Design, Learned from Claude Code — Part 2 of 6*

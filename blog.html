@@ -23,6 +23,7 @@ permalink: /blog/
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="posts-grid">
         {% for post in site.posts %}
+        {% if post.published != false %}
         <article class="post-item group" data-categories="{% for cat in post.categories %}{{ cat | slugify }} {% endfor %}">
             <a href="{{ post.url | relative_url }}">
                 <div class="aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-900 mb-4 shadow-sm">
@@ -39,6 +40,7 @@ permalink: /blog/
                 </div>
             </a>
         </article>
+        {% endif %}
         {% endfor %}
     </div>
 </section>
