@@ -1,0 +1,98 @@
+---
+layout: default
+---
+{% assign series_data = nil %}
+{% for s in site.data.series %}
+  {% if s.slug == page.series_slug %}
+    {% assign series_data = s %}
+  {% endif %}
+{% endfor %}
+
+{% assign series_posts = site.posts | where_exp: "post", "post.series.name == series_data.name" | sort: "series.part" %}
+{% assign main_posts = series_posts | where_exp: "post", "post.series.bonus != true" %}
+{% assign published_count = main_posts | size %}
+
+<article class="max-w-4xl mx-auto">
+    <!-- Hero -->
+    <div class="relative rounded-3xl overflow-hidden mb-10 aspect-[21/9] bg-slate-900 shadow-xl">
+        <img src="{{ series_data.image | relative_url }}" alt="{{ series_data.name }}" class="w-full h-full object-cover opacity-60">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-8">
+            <div class="flex flex-wrap items-center gap-2 mb-3">
+                {% for cat in series_data.categories %}
+                <span class="text-xs font-semibold uppercase tracking-widest text-blue-300">{{ cat }}</span>
+                {% unless forloop.last %}<span class="text-blue-400">·</span>{% endunless %}
+                {% endfor %}
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">{{ series_data.name }}</h1>
+            <p class="text-slate-300 text-base md:text-lg max-w-2xl">{{ series_data.description }}</p>
+        </div>
+    </div>
+
+    <!-- Progress + CTA -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+        <div>
+            <div class="text-sm text-slate-500 dark:text-slate-400 mb-2">Series progress</div>
+            <div class="flex items-center gap-3">
+                <div class="flex-1 w-48 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    {% assign pct = published_count | times: 100 | divided_by: series_data.total %}
+                    <div class="h-full bg-brand rounded-full transition-all" style="width: {{ pct }}%"></div>
+                </div>
+                <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">{{ published_count }} / {{ series_data.total }} parts</span>
+            </div>
+        </div>
+        <a href="{{ series_data.start_url | relative_url }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand text-white font-semibold text-sm hover:bg-blue-600 transition shadow-sm">
+            Start Reading
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </a>
+    </div>
+
+    <!-- Parts list -->
+    <div class="space-y-3">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-5">All Parts</h2>
+        {% for post in series_posts %}
+        <a href="{{ post.url | relative_url }}" class="flex items-start gap-4 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand dark:hover:border-brand hover:bg-blue-50 dark:hover:bg-blue-950/30 transition group">
+            {% if post.series.bonus %}
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold text-xs group-hover:bg-amber-500 group-hover:text-white transition">
+                ★
+            </div>
+            {% else %}
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-brand/10 dark:bg-brand/20 flex items-center justify-center text-brand font-bold text-sm group-hover:bg-brand group-hover:text-white transition">
+                {{ post.series.part }}
+            </div>
+            {% endif %}
+            <div class="flex-1 min-w-0">
+                <h3 class="font-semibold text-slate-900 dark:text-white group-hover:text-brand transition leading-snug">{{ post.title }}</h3>
+                <div class="flex items-center gap-3 mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    <span>{{ post.date | date: "%b %d, %Y" }}</span>
+                    {% if post.read_time %}
+                    <span class="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                    <span>{{ post.read_time }}</span>
+                    {% endif %}
+                </div>
+                {% if post.description %}
+                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400 line-clamp-2">{{ post.description }}</p>
+                {% endif %}
+            </div>
+            <svg class="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-brand flex-shrink-0 mt-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </a>
+        {% endfor %}
+
+        <!-- Coming soon placeholders for unpublished parts -->
+        {% assign remaining = series_data.total | minus: published_count %}
+        {% if remaining > 0 %}
+        {% assign next_part = published_count | plus: 1 %}
+        {% for i in (next_part..series_data.total) %}
+        <div class="flex items-start gap-4 p-4 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 opacity-50">
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 font-bold text-sm">
+                {{ i }}
+            </div>
+            <div class="flex-1">
+                <div class="h-4 w-48 bg-slate-200 dark:bg-slate-700 rounded-full mb-2"></div>
+                <span class="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wide font-medium">Coming soon</span>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</article>

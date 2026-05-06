@@ -1,0 +1,19 @@
+- slug: "claude-code-architecture"
+  name: "Claude Code Architecture"
+  description: "A 6-part series on agentic system design, learned from Claude Code"
+  image: "/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/hero.jpeg"
+  total: 6
+  categories: ["Engineering", "Architecture"]
+  filter_tags: ["Engineering", "Architecture", "AI", "Claude Code"]
+  start_url: "/engineering/architecture/2026/03/10/how-claude-code-is-designed-part-1.html"
+  url: "/series/claude-code-architecture/"
+
+- slug: "the-agent-harness"
+  name: "The Agent Harness"
+  description: "A 12-part engineering guide to building autonomous AI agent infrastructure — Claude Code is our case study, your agent is the goal."
+  image: "/assets/images/posts/2026-04-03-what-is-an-agent-harness-part-1/hero.jpeg"
+  total: 12
+  categories: ["Engineering", "Architecture"]
+  filter_tags: ["Engineering", "Architecture", "AI", "Agents", "Claude Code", "LLM"]
+  start_url: "/engineering/architecture/2026/04/03/what-is-an-agent-harness-part-1.html"
+  url: "/series/the-agent-harness/"
