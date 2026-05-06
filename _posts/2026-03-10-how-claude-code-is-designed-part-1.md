@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "How Claude Code's Architecture Works — 5 Layers You Can Steal for AI Agents"
+title: "How Claude Code's Architecture Works (Part 1) — 5 Layers You Can Steal for AI Agents"
 date: 2026-03-10
 categories: [Engineering, Architecture]
 tags: [AI, Claude Code, System Design, AI Agents, Architecture, LLM, MCP, AI Development, Anthropic]
@@ -14,7 +14,7 @@ series:
   part: 1
   total: 6
   next_url: "/engineering/architecture/2026/03/12/the-master-loop-simplest-pattern-that-works-part-2.html"
-  next_title: "How Claude Code's Master Loop Works — The Simple Pattern That Beats Complex Frameworks"
+  next_title: "How Claude Code's Master Loop Works (Part 2) — The Simple Pattern That Beats Complex Frameworks"
 ---
 
 *Series: Agentic System Design, Learned from Claude Code — Part 1 of 6*
@@ -59,7 +59,7 @@ Every agentic system — whether it's a coding assistant, a customer support bot
 
 ## Claude Code's Architecture: The Five Layers
 
-![Layer Stack Diagram](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Layer-Stack-Diagram.png)
+![Layer Stack Diagram](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Layer-Stack-Diagram.jpeg)
 
 ---
 
@@ -166,7 +166,7 @@ Beyond built-in tools, Claude Code supports **[MCP (Model Context Protocol)](htt
 
 With MCP, Claude can call Slack, Notion, GitHub, databases, or any custom service you build — using the same JSON-in, text-out pattern as the built-in tools. The loop doesn't change at all. You just register a new tool endpoint.
 
-![Tool Layer with MCP](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Tool Layer with MCP.png)
+![Tool Layer with MCP](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Tool Layer with MCP.jpeg)
 
 **Design lesson:** Design your tool interface as a protocol, not an implementation. If every tool shares the same contract, adding a new tool never touches the core loop. MCP proves this scales to external services too.
 
@@ -245,7 +245,7 @@ A component called the Compressor triggers automatically when the context reache
 
 You can also trigger this manually with `/compact` if you want to reset proactively before hitting the limit.
 
-![Context Window and Compressor](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Context Window and Compressor.png)
+![Context Window and Compressor](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Context Window and Compressor.jpeg)
 
 **Design lesson:** Every AI application hits the context window limit eventually. Design your compression and memory strategy before you ship — not after your users start complaining that the agent "forgot" what it was doing.
 
@@ -283,7 +283,7 @@ These modes have a real architectural difference, not just a UI difference:
 
 The recommended workflow (as [shared by Claude Code's creator](https://hannahstulberg.substack.com/p/claude-code-for-everything-how-the)): start in Plan Mode, refine the plan through conversation, then switch to Auto-Accept to execute.
 
-![Three Modes Comparison](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Three Modes Comparison.png)
+![Three Modes Comparison](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Three Modes Comparison.jpeg)
 
 **Design lesson:** Giving users an explicit autonomy dial is a powerful UX pattern for any agentic system. Not every action needs the same level of oversight.
 
@@ -301,7 +301,7 @@ Beyond the five core layers, Claude Code has an extensibility system. These thre
 
 **MCP Servers** — extends the tool layer, as covered above.
 
-![Extensibility Map](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Extensibility Map.png)
+![Extensibility Map](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/Extensibility Map.jpeg)
 
 **Design lesson:** Separate your extension mechanisms by who triggers them and what they add. Skills add context automatically. Commands add explicit workflows. Subagents add delegation. MCP adds external reach. A single "plugin" abstraction tries to do all four and ends up doing none well.
 
@@ -311,7 +311,7 @@ Beyond the five core layers, Claude Code has an extensibility system. These thre
 
 Let's trace "fix the login bug in `src/auth/`" through every layer to make this concrete.
 
-![End-to-End Flow Sequence](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/End-to-End Flow Sequence.png)
+![End-to-End Flow Sequence](/assets/images/posts/2026-03-10-how-claude-code-is-designed-part-1/End-to-End Flow Sequence.jpeg)
 
 Here's what happens step by step:
 

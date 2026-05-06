@@ -18,3 +18,5 @@ assets/images/.originals/
 # _drafts/
 # _drafts/*
 # !_drafts/README.md
+
+.vscode/

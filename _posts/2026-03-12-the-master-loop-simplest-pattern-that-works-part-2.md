@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "How Claude Code's Master Loop Works — The Simple Pattern That Beats Complex Frameworks"
+title: "How Claude Code's Master Loop Works (Part 2) — The Simple Pattern That Beats Complex Frameworks"
 date: 2026-03-12
 categories: [Engineering, Architecture]
 tags: [AI, Claude Code, System Design, AI Agents, ReAct, Agent Loop, LLM]
@@ -14,7 +14,9 @@ series:
   part: 2
   total: 6
   prev_url: "/engineering/architecture/2026/03/10/how-claude-code-is-designed-part-1.html"
-  prev_title: "How Claude Code's Architecture Works — 5 Layers You Can Steal for AI Agents"
+  prev_title: "How Claude Code's Architecture Works (Part 1) — 5 Layers You Can Steal for AI Agents"
+  next_url: "/engineering/architecture/2026/03/18/tools-and-mcp-designing-the-agents-hands-part-3.html"
+  next_title: "How Claude Code's Tool Layer Works (Part 3) — Designing the Agent's Hands"
 ---
 
 *Series: Agentic System Design, Learned from Claude Code — Part 2 of 6*
@@ -74,7 +76,7 @@ function run_agent(user_message):
 That's the whole engine. The loop continues as long as the model responds with tool calls. The moment it produces a plain text response with no tool calls attached, the loop ends and control returns to the user.
 
 
-![The Master Loop Flowchart](/assets/images/posts/2026-03-12-the-master-loop-simplest-pattern-that-works-part-2/The Master Loop Flowchart.png)
+![The Master Loop Flowchart](/assets/images/posts/2026-03-12-the-master-loop-simplest-pattern-that-works-part-2/The Master Loop Flowchart.jpeg)
 
 
 This is genuinely the complete picture. No hidden complexity. The `messages` list is the entire state of the agent. Everything — your original request, every tool call, every result, every model response — accumulates in that single flat list.
@@ -105,7 +107,7 @@ This is managed by a component called **StreamGen**. It wraps the model API call
 
 The effect is that you feel like you're *watching Claude work* — not waiting for it to finish.
 
-![Streaming Output Timeline](/assets/images/posts/2026-03-12-the-master-loop-simplest-pattern-that-works-part-2/Streaming Output Timeline.png)
+![Streaming Output Timeline](/assets/images/posts/2026-03-12-the-master-loop-simplest-pattern-that-works-part-2/Streaming Output Timeline.jpeg)
 
 **Design lesson:** If your agent does anything that takes more than a few seconds, you need streaming. The difference between "streaming tokens as they arrive" and "return everything at the end" is the difference between a tool people use and a tool people abandon. Design streaming in from the start — it's much harder to bolt on later.
 
@@ -184,7 +186,7 @@ Main loop (nO)
 
 **The depth limit:** Sub-agents cannot spawn their own sub-agents. The depth is hard-capped at 1 level. This is not a limitation — it's a deliberate safety design. Without the depth cap, a model that decides to "be helpful" by spawning more agents could create an unbounded tree of running processes, each consuming tokens and potentially making file changes. The depth limit makes the system predictable. At most: one main loop + one sub-agent per task.
 
-![Message History: Flat vs. Graph](/assets/images/posts/2026-03-12-the-master-loop-simplest-pattern-that-works-part-2/Message History.png)
+![Message History: Flat vs. Graph](/assets/images/posts/2026-03-12-the-master-loop-simplest-pattern-that-works-part-2/Message History.jpeg)
 
 **Design lesson:** Subagents are powerful but need hard constraints. Depth limits, tool restrictions per agent, and scoped permissions all matter. The question isn't whether to allow delegation — it's how to make delegation safe.
 

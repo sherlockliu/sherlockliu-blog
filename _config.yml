@@ -5,6 +5,11 @@ description: >-
 baseurl: "" 
 url: "https://sherlockliu.co.uk"
 
+exclude:
+  - "new series"
+  - travel-agent
+  - claude-code-travel-agent
+
 # Build settings
 remote_theme: pages-themes/minimal
 plugins:

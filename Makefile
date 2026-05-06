@@ -1,4 +1,4 @@
-.PHONY: help install build run serve clean build-prod verify deploy optimize-images install-image-tools
+.PHONY: help install build run serve serve-future clean build-prod verify deploy optimize-images install-image-tools
 
 # Default target
 help:
@@ -7,6 +7,7 @@ help:
 	@echo "  make build            - Build the site"
 	@echo "  make run              - Build and serve locally (alias: serve)"
 	@echo "  make serve            - Build and serve locally with auto-reload"
+	@echo "  make serve-future     - Serve locally including future-dated posts"
 	@echo "  make clean            - Clean build artifacts"
 	@echo "  make build-prod       - Build for production"
 	@echo "  make verify           - Verify build integrity"
@@ -32,6 +33,10 @@ run: serve
 # Serve with auto-reload
 serve:
 	bundle exec jekyll serve --livereload
+
+# Serve with future-dated posts visible (dev only)
+serve-future:
+	bundle exec jekyll serve --livereload --config _config.yml,_config_dev.yml
 
 # Clean build artifacts
 clean:

@@ -4,53 +4,128 @@ title: Blog
 permalink: /blog/
 ---
 <section class="space-y-8">
+    <!-- Header + filters -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-8">
         <div>
             <h1 class="text-4xl font-bold mb-2 text-slate-900 dark:text-white">Insights</h1>
             <p class="text-slate-500">Exploring technology, culture, and logic.</p>
         </div>
         <div class="flex flex-wrap gap-2" id="category-filters">
-            <button onclick="filterCategory('all')" class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium border border-brand bg-brand text-white transition">All</button>
-            {% assign categories = site.posts | map: 'categories' | join: ',' | split: ',' | uniq | sort %}
-            {% for category in categories %}
-                {% if category != "" %}
-                <button onclick="filterCategory('{{ category | slugify }}')" class="category-btn px-4 py-1.5 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 transition hover:border-brand">
-                    {{ category }}
+            <button onclick="filterCategory('all')" data-category="all" class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium border border-brand bg-brand text-white transition">All</button>
+            <button onclick="filterCategory('series')" data-category="series" class="category-btn px-4 py-1.5 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 transition hover:border-brand">
+                Series
+            </button>
+            {% assign all_tag_str = "" %}
+            {% for post in site.posts %}
+              {% if post.published != false %}
+                {% for cat in post.categories %}
+                  {% assign all_tag_str = all_tag_str | append: "," | append: cat %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+            {% for series in site.data.series %}
+              {% for tag in series.filter_tags %}
+                {% assign all_tag_str = all_tag_str | append: "," | append: tag %}
+              {% endfor %}
+            {% endfor %}
+            {% assign all_tags = all_tag_str | split: ',' | uniq | sort %}
+            {% for tag in all_tags %}
+                {% if tag != "" %}
+                <button onclick="filterCategory('{{ tag | slugify }}')" data-category="{{ tag | slugify }}" class="category-btn px-4 py-1.5 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 transition hover:border-brand">
+                    {{ tag }}
                 </button>
                 {% endif %}
             {% endfor %}
         </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="posts-grid">
-        {% for post in site.posts %}
-        {% if post.published != false %}
-        <article class="post-item group" data-categories="{% for cat in post.categories %}{{ cat | slugify }} {% endfor %}">
-            <a href="{{ post.url | relative_url }}">
-                <div class="aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-900 mb-4 shadow-sm">
-                    <img src="{{ post.image | relative_url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                </div>
-                <div class="space-y-2">
-                    <div class="flex items-center gap-2 text-xs font-semibold text-brand uppercase tracking-widest">
-                        {{ post.categories | first }}
+
+    <!-- Series banners -->
+    <div id="series-section" class="space-y-4">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Series</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for series in site.data.series %}
+            <div class="series-banner" data-series-slug="{{ series.slug }}" data-series-categories="{% if series.filter_tags %}{% for tag in series.filter_tags %}{{ tag | slugify }} {% endfor %}{% else %}{% for cat in series.categories %}{{ cat | slugify }} {% endfor %}{% endif %}">
+                {% include series-card.html series=series %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Standalone posts -->
+    <div id="standalone-section" class="space-y-4">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white standalone-heading">Posts</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="posts-grid">
+            {% for post in site.posts %}
+            {% if post.published != false %}
+            {% unless post.series %}
+            <article class="post-item group" data-categories="{% for cat in post.categories %}{{ cat | slugify }} {% endfor %}" data-is-series="false">
+                <a href="{{ post.url | relative_url }}">
+                    <div class="aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-900 mb-4 shadow-sm">
+                        <img src="{{ post.image | relative_url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     </div>
-                    <h2 class="text-lg font-bold group-hover:text-brand transition leading-tight line-clamp-2">{{ post.title }}</h2>
-                    <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
-                        <span>{{ post.date | date: "%b %d, %Y" }}</span>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-xs font-semibold text-brand uppercase tracking-widest">
+                            {{ post.categories | first }}
+                        </div>
+                        <h2 class="text-lg font-bold group-hover:text-brand transition leading-tight line-clamp-2">{{ post.title }}</h2>
+                        <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+                            <span>{{ post.date | date: "%b %d, %Y" }}</span>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </article>
-        {% endif %}
-        {% endfor %}
+                </a>
+            </article>
+            {% endunless %}
+            {% endif %}
+            {% endfor %}
+
+            <!-- Series posts shown individually when filtered by category -->
+            {% for post in site.posts %}
+            {% if post.published != false %}
+            {% if post.series %}
+            {% assign post_series_data = nil %}{% for s in site.data.series %}{% if s.name == post.series.name %}{% assign post_series_data = s %}{% endif %}{% endfor %}
+            <article class="post-item series-post-item group" data-categories="{% for cat in post.categories %}{{ cat | slugify }} {% endfor %}" data-series-filter-tags="{% if post_series_data.filter_tags %}{% for tag in post_series_data.filter_tags %}{{ tag | slugify }} {% endfor %}{% endif %}" data-is-series="true" data-series-name="{{ post.series.name | slugify }}">
+                <a href="{{ post.url | relative_url }}">
+                    <div class="aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-900 mb-4 shadow-sm relative">
+                        <img src="{{ post.image | relative_url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute top-3 left-3">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 text-brand text-xs font-semibold backdrop-blur-sm border border-brand/20">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                Part {{ post.series.part }} of {{ post.series.total }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-xs font-semibold text-brand uppercase tracking-widest">
+                            {{ post.categories | first }}
+                        </div>
+                        <h2 class="text-lg font-bold group-hover:text-brand transition leading-tight line-clamp-2">{{ post.title }}</h2>
+                        <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+                            <span>{{ post.date | date: "%b %d, %Y" }}</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
     </div>
 </section>
+
 <script>
     function filterCategory(category) {
-        const posts = document.querySelectorAll('.post-item');
+        const standaloneItems = document.querySelectorAll('.post-item[data-is-series="false"]');
+        const seriesPostItems = document.querySelectorAll('.series-post-item');
+        const seriesBanners = document.querySelectorAll('.series-banner');
+        const seriesSection = document.getElementById('series-section');
+        const standaloneSection = document.getElementById('standalone-section');
+        const standaloneHeading = document.querySelector('.standalone-heading');
         const buttons = document.querySelectorAll('.category-btn');
+
+        // Update active button
         buttons.forEach(btn => {
-            const isMatch = btn.textContent.trim().toLowerCase() === category || (category === 'all' && btn.textContent.trim().toLowerCase() === 'all');
-            if(isMatch) {
+            const isMatch = btn.getAttribute('data-category') === category;
+            if (isMatch) {
                 btn.classList.add('bg-brand', 'text-white', 'border-brand');
                 btn.classList.remove('text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
             } else {
@@ -58,13 +133,53 @@ permalink: /blog/
                 btn.classList.add('text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-800');
             }
         });
-        posts.forEach(post => {
-            const postCategories = post.getAttribute('data-categories').split(' ');
-            if (category === 'all' || postCategories.includes(category)) {
-                post.style.display = 'block';
-            } else {
-                post.style.display = 'none';
-            }
-        });
+
+        if (category === 'all') {
+            // Show series section with all banners
+            seriesSection.style.display = '';
+            seriesBanners.forEach(b => b.style.display = '');
+            // Show all posts (standalone + series)
+            standaloneSection.style.display = '';
+            standaloneItems.forEach(p => p.style.display = 'block');
+            seriesPostItems.forEach(p => { p.style.display = 'block'; p.classList.remove('hidden'); });
+            if (standaloneHeading) standaloneHeading.textContent = 'Posts';
+
+        } else if (category === 'series') {
+            // Show only series banners, hide everything else
+            seriesSection.style.display = '';
+            seriesBanners.forEach(b => b.style.display = '');
+            standaloneSection.style.display = 'none';
+
+        } else {
+            // Category filter: show matching series banners + matching individual posts (standalone + series)
+            seriesSection.style.display = '';
+            let visibleBanners = 0;
+            seriesBanners.forEach(b => {
+                const cats = b.getAttribute('data-series-categories').split(' ');
+                if (cats.includes(category)) { b.style.display = ''; visibleBanners++; }
+                else b.style.display = 'none';
+            });
+            if (visibleBanners === 0) seriesSection.style.display = 'none';
+
+            standaloneSection.style.display = '';
+            standaloneItems.forEach(post => {
+                const postCategories = post.getAttribute('data-categories').split(' ');
+                post.style.display = postCategories.includes(category) ? 'block' : 'none';
+            });
+            // Show individual series posts for this category (check both post categories and series filter_tags)
+            seriesPostItems.forEach(post => {
+                const postCategories = post.getAttribute('data-categories').split(' ').filter(Boolean);
+                const seriesFilterTags = (post.getAttribute('data-series-filter-tags') || '').split(' ').filter(Boolean);
+                const allTags = [...new Set([...postCategories, ...seriesFilterTags])];
+                if (allTags.includes(category)) {
+                    post.style.display = 'block';
+                    post.classList.remove('hidden');
+                } else {
+                    post.style.display = 'none';
+                    post.classList.add('hidden');
+                }
+            });
+            if (standaloneHeading) standaloneHeading.textContent = 'Posts';
+        }
     }
 </script>
